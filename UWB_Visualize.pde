@@ -14,7 +14,7 @@ void setup(){
     metrekare(11,6);
     anchor1 = new Anchor(0,0, "feriha");
     anchor2 = new Anchor(2,3, "feride");
-    anchor3 = new Anchor(8,1, "adını feriha");
+    anchor3 = new Anchor(8,1, "ferhat");
     anchor4 = new Anchor(7,4, "hatçe");
 
 
