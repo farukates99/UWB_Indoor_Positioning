@@ -8,8 +8,6 @@ Anchor anchor1,anchor2,anchor3,anchor4,anchor5;
 void setup(){
 
     fullScreen();
-
-
 }
 void draw(){
     background(255);
@@ -18,11 +16,19 @@ void draw(){
     metrekare(11,6);
     mean = -0.023*meterToPixel;
     stddev = 0.2*meterToPixel;
-    anchor1 = new Anchor(0,0, "feriha");
-    anchor2 = new Anchor(11,0, "feride");
-    anchor3 = new Anchor(0,6, "ferhat");
-    anchor4 = new Anchor(11,6, "yunus");
-    anchor5 = new Anchor(5,3, "ateş");
+    anchor1 = new Anchor(0,0, "0,0");
+    anchor2 = new Anchor(11,0, "11,0");
+    anchor3 = new Anchor(0,6, "0,6");
+    //anchor4 = new Anchor(11,6, "11,6");
+    //anchor5 = new Anchor(5,3, "5,3");
+
+    fill(0, 408, 612, 204);
+
+    text(mouseX/meterToPixel, mouseX+15, mouseY+35);
+    text(",", mouseX+22, mouseY+35);
+    text(mouseY/meterToPixel, mouseX+25, mouseY+35);
+    noFill();
+    
     display();
 }
 void display(){ 
