@@ -1,6 +1,5 @@
 float mean = -0.41, stddev = 0.62;
-float error1, error2, error3;
-int meterToPixel;
+float meterToPixel;
 Anchor anchor1,anchor2,anchor3,anchor4,anchor5;
 
 
@@ -24,9 +23,8 @@ void draw(){
 
     fill(0, 408, 612, 204);
 
-    text(mouseX/meterToPixel, mouseX+15, mouseY+35);
-    text(",", mouseX+22, mouseY+35);
-    text(mouseY/meterToPixel, mouseX+25, mouseY+35);
+    text((float)mouseX/(float)meterToPixel, mouseX+15, mouseY+25);
+    text((float)mouseY/(float)meterToPixel, mouseX+15, mouseY+45);
     noFill();
     
     display();
@@ -38,11 +36,11 @@ void display(){
 
 
 void metrekare(int x, int y){
-    int rectSize;
+    float rectSize;
     strokeWeight(1);
     if((990/x)*y > (1835/y)*x){
-        rectSize = floor(1825/x);
-        meterToPixel = rectSize;
+        rectSize = (1825/x);
+        meterToPixel = 1825/x;
         for (int i = 0; i < x; i++) {
             for (int k = 0; k < y; k++) {
                 rect(10 + i * (rectSize), 10 + k *(rectSize), rectSize, rectSize);
@@ -50,8 +48,8 @@ void metrekare(int x, int y){
         }
     }
     else{
-        rectSize = floor(990/y);
-        meterToPixel = rectSize;
+        rectSize = (990/y);
+        meterToPixel = 990/y;
         for (int i = 0; i < x; i++) {
             for (int k = 0; k < y; k++) {
                 rect(10 + i * (rectSize), 10 + k *(rectSize), rectSize, rectSize);
@@ -70,8 +68,8 @@ public class Anchor {
         y = tempY;
         name = tempName;
 
-        x = x*meterToPixel + 10;
-        y = y*meterToPixel + 10;
+        x = (int)(x*meterToPixel + 10);
+        y = (int)(y*meterToPixel + 10);
         r = dist(mouseX,mouseY,x,y);
         r_rand = r + (randomGaussian()*stddev) + mean;
 
