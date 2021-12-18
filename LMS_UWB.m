@@ -1,10 +1,12 @@
 clear all;
 close all;
+FAIL=0;
 
+for k = 1:1000
 
 a_x = [0 11 0]; % X coordinates of anchors
 a_y = [0 0 6 6];  % Y coordinates of anchors
-
+mu = 0.001;
 % The real distance values without noise
 % anchor_realdist = [8.546 4.247 8.542]; real = [8,3]; % Test case 1 (8,3) 
 %  anchor_realdist = [5.010 8.950 3.599]; real = [3,4]; % Test case 2 (3,4)
@@ -13,7 +15,7 @@ anchor_realdist = [10.82 6.33 9]; real = [9,6]; % Test case 3 (9,6)
 
 
  
-N = 50;  % X ICIN 3 ANCHORDAN N KEZ ALINAN INPUTLAR
+N = 25;  % X ICIN 3 ANCHORDAN N KEZ ALINAN INPUTLAR
 for i = 1:N
     anchor_pseudodist(i,:) = anchor_realdist + error()'; % Adding noise
 end
@@ -34,7 +36,6 @@ w = zeros (sysorder, 1) ; % Initially filter weights are zero
 for n = 1 : N 
     x_co(:,n)= x(n,:)*w; % output of the adaptive filter
     e(n) = d(n) - x_co(n) ; % error signal = desired signal - adaptive filter output
-    mu = 0.001;
     w(:,1) = w(:,1) + (mu * x(n,:) * e(n)).' ; % filter weights update
 end 
 
@@ -45,9 +46,17 @@ w = zeros (sysorder, 1) ; % Initially filter weights are zero
 for n = 1 : N 
     y_co(:,n)= x(n,:)*w; % output of the adaptive filter
     e(n) = d(n) - y_co(n) ; % error signal = desired signal - adaptive filter output
-    mu = 0.001;
     w(:,1) = w(:,1) + (mu * x(n,:) * e(n)).' ; % filter weights update
-end 
+end     
+psuedo_hata(k) = pdist([real;d_x(end), d_y(end)]);
+tahmin_hata(k) = pdist([real;x_co(end), y_co(end)]);
+if psuedo_hata(k)-tahmin_hata(k) < 0.1
+FAIL = FAIL+1;
+end
+end
+
+
+
 
 figure;
 plot(e);
@@ -67,12 +76,11 @@ stem(x_co(end), y_co(end))
 hold on
 stem(real(1),real(2));
 legend('pseudo','tahmin','gercek')
+title('Pozisyon Grafiği')
 axis([0 11 0 6])
 
 
 
-psuedo_hata = pdist([real;d_x(end), d_y(end)])
-tahmin_hata = pdist([real;x_co(end), y_co(end)])
 
 
 
