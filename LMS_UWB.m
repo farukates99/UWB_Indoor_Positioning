@@ -5,7 +5,7 @@ FAIL=0;
 for k = 1:1000
 
 a_x = [0 11 0]; % X coordinates of anchors
-a_y = [0 0 6 6];  % Y coordinates of anchors
+a_y = [0 0 6];  % Y coordinates of anchors
 
 % The real distance values without noise
 anchor_realdist = [8.546 4.247 8.542]; real = [8,3]; % Test case 1 (8,3) 
@@ -29,14 +29,14 @@ end
   D = 2*a_x(3) - 2*a_x(2);
   E = 2*a_y(3) - 2*a_y(2);
   F = anchor_pseudodist(:,2).^2 - anchor_pseudodist(:,3).^2 - a_x(2)^2 + a_x(3)^2 - a_y(2)^2 + a_y(3)^2;
-  d_x = (C*E - F*B) / (E*A - B*D);
-  d_y = (C*D - A*F) / (B*D - A*E);
-  
+  dx = (C*E - F*B) / (E*A - B*D);
+  dy = (C*D - A*F) / (B*D - A*E);
+ 
 sysorder = 3;
 x  = [anchor_pseudodist(:,1) anchor_pseudodist(:,2) anchor_pseudodist(:,3)];     % Input to the filter 
-d  = d_x;  % Desired signal = output of H + Uncorrelated noise signal
+d  = dx;  % Desired signal = output of H + Uncorrelated noise signal
 w = zeros (sysorder, 1) ; % Initially filter weights are zero
-
+ 
 for n = 1 : N 
     x_co(:,n)= x(n,:)*w; % output of the adaptive filter
     e(n) = d(n) - x_co(n) ; % error signal = desired signal - adaptive filter output
@@ -44,7 +44,7 @@ for n = 1 : N
 end 
 
 x  = [anchor_pseudodist(:,1) anchor_pseudodist(:,2) anchor_pseudodist(:,3)];     % Input to the filter 
-d  = d_y;  % Desired signal = output of H + Uncorrelated noise signal
+d  = dy;  % Desired signal = output of H + Uncorrelated noise signal
 w = zeros (sysorder, 1) ; % Initially filter weights are zero
 
 for n = 1 : N 
@@ -52,7 +52,7 @@ for n = 1 : N
     e(n) = d(n) - y_co(n) ; % error signal = desired signal - adaptive filter output
     w(:,1) = w(:,1) + (mu * x(n,:) * e(n)).' ; % filter weights update
 end     
-psuedo_hata(k) = pdist([real;d_x(end), d_y(end)]);
+psuedo_hata(k) = pdist([real;dx(end), dy(end)]);
 tahmin_hata(k) = pdist([real;x_co(end), y_co(end)]);
 
 tahmin_y(k) = y_co(end);
@@ -62,24 +62,21 @@ FAIL = FAIL+1;
 end
 end
 
-
-
-
 figure;
 plot(e);
 title('Error margin')
 figure;
-plot(d_y)
+plot(dy)
 hold on
 plot(y_co);
 legend('Y Pseudo','Y Tahmin')
 
 
 figure;
-% plot(d_x(end),d_y(end),'rx')
-scatter(d_x,d_y);
+plot(dx(end),dy(end),'rx')
+scatter(dx,dy);
 hold on
-% plot(x_co(end),y_co(end),'bx');
+plot(x_co(end),y_co(end),'bx');
 scatter(tahmin_x,tahmin_y);
 hold on
 plot(real(1),real(2),'ks');
